@@ -1,0 +1,6 @@
+## Interface: 11302
+## Title: ShieldTracker
+## Author: Icebag - Gehennas, Mardur - Gehennas
+## Version: 1.12
+shieldtracker.lua
+shieldtracker.xml
