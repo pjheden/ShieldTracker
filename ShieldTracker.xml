@@ -5,6 +5,7 @@
    <Scripts>
      <OnLoad>
        Init();
+       InitUI();
      </OnLoad>
    </Scripts>
   </Frame>

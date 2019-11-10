@@ -2,5 +2,7 @@
 ## Title: ShieldTracker
 ## Author: Icebag - Gehennas, Mardur - Gehennas
 ## Version: 1.12
+
+ShieldTrackerUI.lua
 ShieldTracker.lua
 ShieldTracker.xml
