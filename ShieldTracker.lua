@@ -32,8 +32,7 @@ end
 local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID,
    sourceName, sourceFlags, sourceRaidFlags, recipientGUID, recipientName,
    recipientFlags, recipientRaidFlags, ...)
-  -- TODO: get current player name
-  local playerName = UnitName('player')
+  local playerName = UnitName("player")
   if recipientName == playerName then
     if event == "SPELL_ABSORBED" then
       OnSpellAbsorbed(...)
@@ -48,7 +47,7 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID,
 end
 
 function OnSpellAbsorbed(...)
-  -- firstARg is some unknown variable, but it seems that the return arugments
+  -- firstArg is some unknown variable, but it seems that the return arugments
   -- are different if it is 0 compared to non zero. Has something to do with
   -- if it is melee dmg or caster dmg.
   local firstArg = ...
