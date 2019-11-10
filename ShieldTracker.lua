@@ -35,7 +35,6 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID,
   -- TODO: get current player name
   local playerName = UnitName('player')
   if recipientName == playerName then
-    print(event)
     if event == "SPELL_ABSORBED" then
       OnSpellAbsorbed(...)
     elseif event == "SPELL_AURA_APPLIED" then
