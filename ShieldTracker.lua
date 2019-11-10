@@ -14,16 +14,13 @@ function Init()
   -- Step 1: On buff event check if the spell is a shield spell
   f:SetScript("OnEvent", OnEvent)
 
-  -- TOP LEVEL:
-  -- NECESSARY
-  -- * Register to correct events,
-  -- * Store or get data of shield spell and HP,
-  -- * Visualize health of shield,
-  --
-  -- EXTRA
-  -- * Play sound on break
-  -- * Shield health on other players
-  -- * (Store what players have what talents)
+  -- prioritized TODO:
+  -- 1. Set recepientName to actual player in ParseLogMessage()
+  -- 2. Graphical representation of shield HP instead of print
+  -- 3. Play sound on break
+  -- 4 Rename addon to "WillItPop"
+  -- 5. Adjust shield hp on spellpower / talents
+  -- 6. Shield health on other players
 end
 
 function OnEvent(self, event, ...)
@@ -38,7 +35,6 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID,
   -- TODO: get current player name
   local playerName = UnitName("player")
   if recipientName == playerName then
-    print(event)
     if event == "SPELL_ABSORBED" then
       OnSpellAbsorbed(...)
     elseif event == "SPELL_AURA_APPLIED" then
