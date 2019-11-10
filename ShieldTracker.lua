@@ -36,7 +36,7 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID,
    sourceName, sourceFlags, sourceRaidFlags, recipientGUID, recipientName,
    recipientFlags, recipientRaidFlags, ...)
   -- TODO: get current player name
-  local playerName = UnitName('player')
+  local playerName = UnitName("player")
   if recipientName == playerName then
     print(event)
     if event == "SPELL_ABSORBED" then
