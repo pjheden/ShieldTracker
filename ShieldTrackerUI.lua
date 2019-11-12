@@ -1,26 +1,22 @@
-BarConfig = {
-    height = 24,
-    width = 116,
-    borderScale = 1.1
-}
-
 function InitUI ()
   print("ShieldTracker: initUI")
+
+  BarConfig = {
+      height = 24,
+      width = 116,
+      borderScale = 1.1
+  }
 
   local shieldBar = CreateFrame("Frame", "ShieldTrackerBar", UIParent) --Ignored ParentUI
   shieldBar:SetSize(BarConfig.width, BarConfig.height*3)
 	shieldBar:SetMovable(true)
-  print("After creating frame")
 
   shieldBar:SetPoint("CENTER", 0, 0)
 
+  -- Create 3 hidden bars initially
   CreateNewBar(1, GetColor("red"))
   CreateNewBar(2, GetColor("green"))
   CreateNewBar(3, GetColor("blue"))
-
-  SetShieldHealth(1, 0.5)
-  RemoveBar(2)
-  SetShieldHealth(3, 0.1)
 end
 
 function GetColor(name)
@@ -53,6 +49,9 @@ function CreateNewBar(index, color)
   barBorder:SetHeight(_G["ShieldTrackerBarBackground"..index]:GetHeight() * BarConfig.borderScale)
   barBorder:SetTexture("Interface\\Tooltips\\UI-StatusBar-Border")
   barBorder:SetPoint("CENTER", 0, index*BarConfig.height)
+
+  _G["ShieldTrackerBarBackground"..index]:Hide(0)
+  _G["ShieldTrackerBarBorder"..index]:Hide(0)
 end
 
 function SetShieldHealth(index, hpPerc)
@@ -61,10 +60,17 @@ function SetShieldHealth(index, hpPerc)
   _G["ShieldTrackerBarBackground"..index]:SetWidth(maxWidth * hpPerc)
 end
 
-function RemoveBar(index)
-  -- TODO: properly remove it
+function ShowBar(index)
+  _G["ShieldTrackerBarBackground"..index]:Show(0)
+  _G["ShieldTrackerBarBorder"..index]:Show(0)
+end
+
+function HideBar(index)
+  -- Hide it
   _G["ShieldTrackerBarBackground"..index]:Hide(0)
   _G["ShieldTrackerBarBorder"..index]:Hide(0)
+  -- Reset values
+  SetShieldHealth(index, 1.0)
 end
 
 -- function OnUpdate(self, elapsed)

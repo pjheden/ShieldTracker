@@ -7,7 +7,8 @@ function Init()
   }
 
   currentShields = {}
-
+  counter = 1
+  DEBUG = false
   local f = CreateFrame("Frame");
   -- Step 3: Register so you listen to damage taken
   f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -15,8 +16,6 @@ function Init()
   f:SetScript("OnEvent", OnEvent)
 
   -- prioritized TODO:
-  -- 1. Set recepientName to actual player in ParseLogMessage()
-  -- 2. Graphical representation of shield HP instead of print
   -- 3. Play sound on break
   -- 4 Rename addon to "WillItPop"
   -- 5. Adjust shield hp on spellpower / talents
@@ -64,35 +63,49 @@ function UpdateShieldHealth(name, dmg)
   for i = 1, #currentShields + 1 do
     if name == currentShields[i].Name then
       currentShields[i].HP = currentShields[i].HP - dmg
-      print("============")
-      print("Current Shield Name: " .. currentShields[i].Name)
-      print("Current Shield HP: " .. currentShields[i].HP)
-      print("============")
+      if DEBUG then
+        print("============")
+        print("Current Shield Name: " .. currentShields[i].Name)
+        print("Current Shield HP: " .. currentShields[i].HP)
+        print("============")
+      end
+      -- Update UI
+      local maxShieldHealth = shieldHealth[currentShields[i].Name]
+      local hpPerc = currentShields[i].HP / maxShieldHealth
+      SetShieldHealth(currentShields[i].BarIndex, hpPerc)
       break
     end
   end
 end
 
+function UpdateCounter()
+  counter = counter + 1
+  if counter == 4 then counter = 1 end
+end
 -- NEW SHIELD ON TARGET
 function OnAuraApplied(...)
   -- Kolla att det är en aura vi bryr oss om
   -- Add to currentShields list
   local _, shieldName = ...
-  print("OnAuraApplied: " .. shieldName)
+  if DEBUG then print("OnAuraApplied: " .. shieldName) end
   local currentShieldHealth = shieldHealth[shieldName]
   if currentShieldHealth ~= nil then
     curShield = {
       ["HP"] = currentShieldHealth,
-      ["Name"] = shieldName
+      ["Name"] = shieldName,
+      ["BarIndex"] = counter
     }
     table.insert(currentShields, curShield)
+    -- Update UI
+    ShowBar(counter, GetColor("red"))
+    UpdateCounter()
   end
 end
 
 -- CAST SAME SHIELD AGAIN
 function OnAuraRefreshed(...)
   local _, shieldName = ...
-  print("OnAuraRefreshed: " .. shieldName)
+  if DEBUG then print("OnAuraRefreshed: " .. shieldName) end
   -- Get health from DB
   local currentShieldHealth = shieldHealth[shieldName]
   if currentShieldHealth == nil then return end
@@ -101,6 +114,8 @@ function OnAuraRefreshed(...)
     if shieldName == currentShields[i].Name then
       -- Update shield data
       currentShields[i].HP = currentShieldHealth
+      -- Update UI
+      SetShieldHealth(currentShields[i].BarIndex, 1.0)
     end
   end
 
@@ -109,14 +124,16 @@ end
 -- REMOVED, EXPIRED, OUT OF HEALTH
 function OnAuraRemoved(...)
   local _, shieldName = ...
-  print("OnAuraRemoved: "..shieldName)
+  if DEBUG then print("OnAuraRemoved: " .. shieldName) end
   -- Check if we have it in our list of shields
   for i = 1, #currentShields + 1 do
     if shieldName == currentShields[i].Name then
-      table.remove(currentShields, i)
       print("MACKE SHIELDA MIG FÖR FAN")
       -- TODO: Play sound if right aura?
-      break
+      -- Update UI
+      HideBar(currentShields[i].BarIndex)
+      table.remove(currentShields, i)
+
     end
   end
 
